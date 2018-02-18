@@ -275,7 +275,7 @@
 
            if ($row->status != 3) {
              echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
-             echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
+             echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post" id="donorRejectForm' . $row->id . '">';
              echo '<input type="hidden" name="id" value="' . $row->id . '">';
              echo '<input type="hidden" name="action" value="reject">';
              echo '<button name="submit">Reject</button>';
@@ -286,7 +286,7 @@
 
          if ($row->status == 1) {
            echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
-           echo '<button style="margin: 10px; width: 100%;" type="button" onclick="this.style.display=\'none\'; document.getElementById(\'helpDonorForm' . $row->id . '\').style.display=\'block\';" id="donorHelpButton' . $row->id . '">Help</button>';
+           echo '<button style="margin: 10px; width: 100%;" type="button" onclick="this.style.display=\'none\'; document.getElementById(\'helpDonorForm' . $row->id . '\').style.display=\'block\'; document.getElementById(\'donorRejectForm' . $row->id . '\').style.display=\'none\';" id="donorHelpButton' . $row->id . '">Help</button>';
            echo '</div>';
 
            echo '<form style="display: none; margin: 10px; width: 100%;" id="helpDonorForm' . $row->id . '" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
@@ -302,7 +302,7 @@
 
            echo '<div style="margin: 10px; width: 100%;">';
            echo '<input style="margin-right: 5px;" type="submit" name="submit" value="Submit">';
-           echo '<button type="button" onclick="this.style.display=\'none\'; document.getElementById(\'donorHelpButton' . $row->id . '\').style.display=\'block\'; document.getElementById(\'helpDonorForm' . $row->id . '\').style.display=\'none\';">Cancel</button>';
+           echo '<button type="button" onclick="document.getElementById(\'donorHelpButton' . $row->id . '\').style.display=\'block\'; document.getElementById(\'helpDonorForm' . $row->id . '\').style.display=\'none\'; document.getElementById(\'donorRejectForm' . $row->id . '\').style.display=\'block\';">Cancel</button>';
            echo '</div>';
            echo '</form>';
          }
