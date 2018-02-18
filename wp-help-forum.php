@@ -17,8 +17,8 @@
      $sql = "CREATE TABLE $table_name (
        id INTEGER NOT NULL AUTO_INCREMENT,
        dateCreated DATETIME NOT NULL,
-       title VARCHAR(64) NOT NULL,
-       description VARCHAR(512) NOT NULL,
+       title VARCHAR(50) NOT NULL,
+       description VARCHAR(500) NOT NULL,
        views INTEGER NOT NULL DEFAULT 0,
        PRIMARY KEY  (id)
      ) $charset_collate;";
@@ -28,7 +28,12 @@
    }
 
    function help_forum_deactivate() {
+     global $wpdb;
 
+     $table_name = $wpdb->prefix . 'helpforum';
+
+     $sql = 'DROP TABLE IF EXISTS ' . $table_name . ';';
+     $wpdb->query($sql);
    }
 
    function help_forum_uninstall() {
@@ -38,15 +43,16 @@
    function help_forum_form() {
      $args = array();
 
+     echo '<h2>Create Need</h2>';
      echo '<form action"' . $_SERVER['REQUEST_URI'] . '" method="post">'
 ?>
 	<div>
 		<label for="title"><strong>Title</strong></label>
-		<input type="text" name="title">
+		<input type="text" name="title" maxlength="50">
 	</div>
 	<div>
 		<label for="description"><strong>Description</strong></label>
-		<input type="text" name="description">
+		<input type="text" name="description" maxlength="500">
 	</div>
 	<br>
 	<input type="submit" name="submit" value="Submit">
@@ -73,8 +79,6 @@
        );
 
        echo '<p><strong>Posted.</strong></p>';
-       echo '<p> Title: ' . $title . '</p>';
-       echo '<p> Description: ' . $description . '</p>';
      } else {
        help_forum_form();
      }
@@ -91,13 +95,14 @@
 
      $table_name = $wpdb->prefix . 'helpforum';
 
-     $sql = 'SELECT id, title, description FROM ' . $table_name . ';';
+     $sql = 'SELECT id, dateCreated, title, description FROM ' . $table_name . ';';
      $rows = $wpdb->get_results( $sql );
 
-     echo '<table><thead><tr><th>#</th><th>Title</th><th>Description</th></tr></thead><tbody>';
+     echo '<h2>View Needs</h2>';
+     echo '<table><thead><tr><th>Date</th><th>Title</th><th>Description</th></tr></thead><tbody>';
 
      foreach ( $rows as $row ) {
-       echo '<tr><td>' . $row->id . '</td><td>' . $row->title . '</td><td>' . $row->description . '</td></tr>';
+       echo '<tr><td>' . $row->dateCreated . '</td><td>' . $row->title . '</td><td>' . $row->description . '</td></tr>';
      }
 
      echo '</tbody></table>';
