@@ -239,7 +239,7 @@
            echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
            echo '<input type="hidden" name="id" value="' . $row->id . '">';
            echo '<input type="hidden" name="action" value="accept">';
-           echo '<button>Accept</button>';
+           echo '<button name="submit">Accept</button>';
            echo '</form>';
            echo '</div>';
 
@@ -247,11 +247,17 @@
            echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
            echo '<input type="hidden" name="id" value="' . $row->id . '">';
            echo '<input type="hidden" name="action" value="reject">';
-           echo '<button>Reject</button>';
+           echo '<button name="submit">Reject</button>';
            echo '</form>';
            echo '</div>';
          } else if ($row->status == 1) {
-
+           echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
+           echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
+           echo '<input type="hidden" name="id" value="' . $row->id . '">';
+           echo '<input type="hidden" name="action" value="help">';
+           echo '<button name="submit">Help</button>';
+           echo '</form>';
+           echo '</div>';
          }
 
          echo '</div>';
@@ -264,6 +270,28 @@
    }
 
    function help_forum_list_handler() {
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . 'helpforum';
+
+        if ( isset( $_POST['submit] ) ) {
+          $id = sanitize_text_field( $_POST['id'] );
+          $action = sanitize_text_field( $_POST['action'] );
+
+          $status = 0;
+
+          if ($action == "help") {
+
+          } else if ( $action == "accept" and current_user_can( 'edit_posts') ) {
+            $status = 1;
+          } else if ( $action == "reject" and current_user_can( 'edit_posts' ) ) {
+            $status = 3;
+          }
+
+          $sql = 'UPDATE ' . $table_name . ' SET status = ' . $status . ' WHERE id = ' . $id . ';';
+          $wpdb->query( $sql );
+        }
+
 	help_forum_list();
    }
 
