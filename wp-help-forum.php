@@ -144,7 +144,6 @@
      echo '<input style="width: 29%;" type="number" name="' . $person . 'Zip" maxlength="10" placeholder="Zip">';
      echo '</div>';
      echo '</div>';
-     echo '<br>';
    }
 
    function help_forum_form() {
@@ -165,6 +164,7 @@
 
      help_forum_general_form_body('contact', 'Contact');
 
+     echo '<br>';
      echo '<input type="submit" name="submit" value="Submit">';
      echo '</form>';
    }
@@ -293,12 +293,13 @@
            echo '<h3>Enter Donor Information</h3>';
            echo '<input type="hidden" name="id" value="' . $row->id . '">';
            echo '<input type="hidden" name="action" value="help">';
+
+           help_forum_general_form_body('donor', 'Donor');
+
            echo '<div>';
            echo '<label for="donorComment"><strong>Any comments?</strong></label>';
            echo '<textarea name="donorComment" maxlength="500"></textarea>';
            echo '</div>';
-
-           help_forum_general_form_body('donor', 'Donor');
 
            echo '<div style="margin: 10px; width: 100%;">';
            echo '<input style="margin-right: 5px;" type="submit" name="submit" value="Submit">';
