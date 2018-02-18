@@ -70,7 +70,7 @@
      echo '<div>';
      echo '<label for="contactName"><strong>Contact name</strong></label>';
      echo '<div name="contactName">';
-     echo '<input style="width: 32%; margin-right: 1%;" type="text" name="contactTitle" maxlength="10" placeholder="Title" list="contactTitles" required>';
+     echo '<input style="width: 22%; margin-right: 1%;" type="text" name="contactTitle" maxlength="10" placeholder="Title" list="contactTitles" required>';
      echo '<datalist id="contactTitles">';
      echo '<option value="Mr">';
      echo '<option value="Mrs">';
@@ -78,8 +78,8 @@
      echo '<option value="Miss">';
      echo '<option value="Mx">';
      echo '</datalist>';
-     echo '<input style="width: 33%; margin-right: 1%;" type="text" name="contactFirstName" maxlength="50" placeholder="First" required>';
-     echo '<input style="width: 33%;" type="text" name="contactLastName" maxlength="50" placeholder="Last" required>';
+     echo '<input style="width: 38%; margin-right: 1%;" type="text" name="contactFirstName" maxlength="50" placeholder="First" required>';
+     echo '<input style="width: 38%;" type="text" name="contactLastName" maxlength="50" placeholder="Last" required>';
      echo '</div>';
      echo '</div>';
      echo '<div>';
