@@ -94,8 +94,11 @@
      if ( isset( $_POST['submit'] ) ) {
        $need = sanitize_text_field( $_POST['need'] );
        $beneficiary = sanitize_text_field( $_POST['beneficiary'] );
-       $circumstance = sanitize_text_field( $_POST['circumstance'] );
+       $circumstance = sanitize_textarea_field( $_POST['circumstance'] );
        $contactName = sanitize_text_field( $_POST['contactName'] );
+       $contactEmail = sanitize_email( $_POST['contactEmail'] );
+       $contactPhone = sanitize_text_field( $_POST['contactPhone'] );
+       $contactAddress = sanitize_text_field( $_POST['contactAddress'] );
 
        $table_name = $wpdb->prefix . 'helpforum';
 
@@ -107,6 +110,9 @@
            'beneficiary' => $beneficiary,
            'circumstance' => $circumstance,
            'contactName' => $contactName,
+           'contactEmail' => $contactEmail,
+           'contactPhone' => $contactPhone,
+           'contactAddress' => $contactAddress,
          )
        );
 
@@ -136,9 +142,14 @@
        echo '<div>';
 
        foreach ( $rows as $row ) {
-         echo '<div style="border: 1px solid #ccc; border-radius: 8px; margin-top: 5px;">';
+         echo '<div style="display: flex; border: 1px solid #ccc; border-radius: 8px; margin-top: 5px;">';
+         echo '<div style="width: 85%;">';
          echo '<h3 style="margin: 5px;">' . $row->need . '</h3>';
          echo '<p style="margin: 5px;">' . $row->circumstance . '</p>';
+         echo '</div>';
+         echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
+         echo '<button style="margin: 10px; width: 100%;">Help</button>';
+         echo '</div>';
          echo '</div>';
        }
 
