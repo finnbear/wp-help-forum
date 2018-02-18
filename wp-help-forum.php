@@ -231,7 +231,7 @@
      $sql = '';
 
      if ($admin) {
-       $sql = 'SELECT id, dateCreated, status, need, beneficiary, circumstance FROM ' . $table_name . ';';
+       $sql = 'SELECT id, dateCreated, status, need, beneficiary, circumstance, contactTitle, contactFirstName, contactLastName, contactEmail, contactPhone, contactAddress, contactZip, contactCity, contactState, donorTitle, donorFirstName, donorLastName, donorEmail, donorPhone, donorAddress, donorZip, donorCity, donorState, donorComment FROM ' . $table_name . ';';
      } else {
        $sql = 'SELECT id, dateCreated, status, need, circumstance FROM ' . $table_name . ' WHERE status = 1;';
      }
@@ -257,7 +257,7 @@
          echo '</div>';
 
          if ($admin) {
-           if ($row->status != 1) {
+           if ($row->status != 1 and $row->status != 2) {
              echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
              echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
              echo '<input type="hidden" name="id" value="' . $row->id . '">';
@@ -273,7 +273,7 @@
              echo '</div>';
            }
 
-           if ($row->status != 3) {
+           if ($row->status != 3 and $row->status != 2) {
              echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
              echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post" id="donorRejectForm' . $row->id . '">';
              echo '<input type="hidden" name="id" value="' . $row->id . '">';
@@ -306,7 +306,21 @@
            echo '<button type="button" onclick="document.getElementById(\'donorHelpButton' . $row->id . '\').style.display=\'block\'; document.getElementById(\'helpDonorForm' . $row->id . '\').style.display=\'none\'; document.getElementById(\'donorRejectForm' . $row->id . '\').style.display=\'block\';">Cancel</button>';
            echo '</div>';
            echo '</form>';
+         } else if ($row->status == 2 and current_user_can('edit_posts')) {
+           echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
+           echo '<button style="margin: 10px; width: 100%;" type="button" onclick="this.style.display=\'none\'; document.getElementById(\'helpDonorDetails' . $row->id . '\').style.display=\'block\';" id="donorDetailsButton' . $row-> id . '">Donor Details</button>';
+           echo '</div>';
+
+           echo '<div style="display: none; margin: 10px; width: 100%;" id="helpDonorDetails' . $row->id . '">';
+           echo '<h3>Donor Details</h3>';
+           echo '<p><strong>First name:</strong> ' . $row.donorFirstName . '</p>';
+
+           echo '<div style="margin: 10px; width: 100%;">';
+           echo '<button type="button" onclick="document.getElementById(\'donorDetailsButton' . $row->id . '\').style.display = \'block\'; document.getElementById(\'helpDonorDetails' . $row->id . '\').style.display=\'none\';">Close</button>';
+           echo '</div>';
+           echo '</div>';
          }
+
 
          echo '</div>';
        }
@@ -329,6 +343,30 @@
           $status = 0;
 
           if ($action == "help") {
+            $donorTitle = sanitize_text_field( $_POST['donorTitle'] );
+            $donorFirstName = sanitize_text_field( $_POST['donorFirstName'] );
+            $donorLastName = sanitize_text_field( $_POST['donorLastName'] );
+            $donorEmail = sanitize_email( $_POST['donorEmail'] );
+            $donorPhone = sanitize_text_field( $_POST['donorPhone'] );
+            $donorAddress = sanitize_text_field( $_POST['donorAddress'] );
+            $donorZip = sanitize_text_field( $_POST['donorZip'] );
+            $donorCity = sanitize_text_field( $_POST['donorCity'] );
+            $donorState = sanitize_text_field( strtoupper( $_POST['donorState'] ) );
+            $donorComment = sanitize_textarea_field( $_POST['donorComment'] );
+
+            $sql = 'UPDATE ' . $_table_name . ' SET donorTitle = "' . $donorTitle . '",
+                                                    donorFirstName = "' . $donorFirstName . '",
+                                                    donorLastName = "' . $donorLastName . '",
+                                                    donorEmail = "' . $donorEmail . '",
+                                                    donorPhone = "' . $donorPhone . '",
+                                                    donorAddress = "' . $donorAddress . '",
+                                                    donorZip = "' . $donorZip . '",
+                                                    donorCity = "' . $donorCity . '",
+                                                    donorState = "' . $donorState . '",
+                                                    donorComment = "' . $donorComment . '"
+                                                WHERE id = ' . $id . ';';
+            $wpdb->query( $sql );
+
             $status = 2;
           } else if (current_user_can( 'edit_posts' ) ) {
             if ( $action == "accept" ) {
