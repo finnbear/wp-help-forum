@@ -248,7 +248,13 @@
              echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
              echo '<input type="hidden" name="id" value="' . $row->id . '">';
              echo '<input type="hidden" name="action" value="accept">';
-             echo '<button name="submit">Accept</button>';
+
+             if ($row->status == 3) {
+               echo '<button name="submit">Restore</button>';
+             } else {
+               echo '<button name="submit">Accept</button>';
+             }
+
              echo '</form>';
              echo '</div>';
            }
