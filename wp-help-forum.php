@@ -10,7 +10,7 @@
   defined( 'ABSPATH' ) or die( 'HelpForum not loaded by WordPress.' );
 
   function generateRandomString($length = 6) {
-     $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+     $characters = '123456789ABCDE';
      $charactersLength = strlen($characters);
      $randomString = '';
      for ($i = 0; $i < $length; $i++) {
@@ -27,11 +27,18 @@
      $sql = "CREATE TABLE $table_name (
        id INTEGER NOT NULL AUTO_INCREMENT,
        dateCreated DATETIME NOT NULL,
-       title VARCHAR(51) NOT NULL,
-       beneficiary VARCHAR(101) NOT NULL,
-       need VARCHAR(501) NOT NULL,
-       contact VARCHAR(101) NOT NULL,
-       code VARCHAR(7) UNIQUE NOT NULL,
+       status INTEGER NOT NULL DEFAULT 0, /* 0=pending, 1=approved, 2=fulfilled, 3=rejected */
+       need VARCHAR(50) NOT NULL,
+       beneficiary VARCHAR(100) NOT NULL,
+       circumstance VARCHAR(500) NOT NULL,
+       contactName VARCHAR(100) NOT NULL,
+       contactEmail VARCHAR(100),
+       contactPhone VARCHAR(20),
+       contactCity VARCHAR(50),
+       contactState VARCHAR(2),
+       contactZip INTEGER,
+       contactAddress VARCHAR(100),
+       code VARCHAR(6) UNIQUE NOT NULL,
        views INTEGER NOT NULL DEFAULT 0,
        PRIMARY KEY  (id)
      ) $charset_collate;";
@@ -56,24 +63,24 @@
    function help_forum_form() {
      $args = array();
 
-     echo '<h2>Create Need</h2>';
+     echo '<h2>Create circumstance</h2>';
      echo '<form action"' . $_SERVER['REQUEST_URI'] . '" method="post">'
 ?>
 	<div>
-		<label for="title"><strong>Title</strong></label>
-		<input type="text" name="title" maxlength="50">
+		<label for="need"><strong>What is needed?</strong></label>
+		<input type="text" name="need" maxlength="50">
 	</div>
 	<div>
-		<label for="beneficiary"><strong>Beneficiary</strong></label>
+		<label for="beneficiary"><strong>Who is the beneficiary?</strong></label>
 		<input type="text" name="beneficiary" maxlength="100">
 	</div>
 	<div>
-		<label for="need"><strong>Need</strong></label>
-		<input type="text" name="need" maxlength="500">
+		<label for="circumstance"><strong>What are the circumstances?</strong></label>
+		<textarea name="circumstance" maxlength="500"></textarea>
 	</div>
 	<div>
-		<label for="contact"><strong>Contact</strong></label>
-		<input type="text" name="contact" maxlength="100">
+		<label for="contact"><strong>Contact information</strong></label>
+		<input type="text" name="contactName" maxlength="100">
 	</div>
 	<br>
 	<input type="submit" name="submit" value="Submit">
@@ -85,10 +92,10 @@
      global $wpdb;
 
      if ( isset( $_POST['submit'] ) ) {
-       $title = sanitize_text_field( $_POST['title'] );
-       $beneficiary = sanitize_text_field( $_POST['beneficiary'] );
        $need = sanitize_text_field( $_POST['need'] );
-       $contact = sanitize_text_field( $_POST['contact'] );
+       $beneficiary = sanitize_text_field( $_POST['beneficiary'] );
+       $circumstance = sanitize_text_field( $_POST['circumstance'] );
+       $contactName = sanitize_text_field( $_POST['contactName'] );
 
        $table_name = $wpdb->prefix . 'helpforum';
 
@@ -99,10 +106,10 @@
          $table_name,
          array(
            'dateCreated' => current_time('mysql'),
-           'title' => $title,
-           'beneficiary' => $beneficiary,
            'need' => $need,
-           'contact' => $contact,
+           'beneficiary' => $beneficiary,
+           'circumstance' => $circumstance,
+           'contactName' => $contactName,
            'code' => $code,
          )
        );
@@ -124,21 +131,21 @@
 
      $table_name = $wpdb->prefix . 'helpforum';
 
-     $sql = 'SELECT id, dateCreated, title, beneficiary, need FROM ' . $table_name . ';';
+     $sql = 'SELECT id, dateCreated, need, beneficiary, circumstance FROM ' . $table_name . ';';
      $rows = $wpdb->get_results( $sql );
 
-     echo '<h2>View Needs</h2>';
+     echo '<h2>View circumstances</h2>';
 
      if ( sizeof($rows) > 0 ) {
-       echo '<table><thead><tr><th>Date</th><th>Title</th><th>Beneficiary</th><th>Need</th></tr></thead><tbody>';
+       echo '<table><thead><tr><th>Date</th><th>Need</th><th>Beneficiary</th><th>Circumstance</th></tr></thead><tbody>';
 
        foreach ( $rows as $row ) {
-         echo '<tr><td>' . $row->dateCreated . '</td><td>' . $row->title . '</td><td>' . $row->beneficiary . '</td><td>' . $row->need . '</td></tr>';
+         echo '<tr><td>' . $row->dateCreated . '</td><td>' . $row->need . '</td><td>' . $row->beneficiary . '</td><td>' . $row->circumstance . '</td></tr>';
        }
 
        echo '</tbody></table>';
      } else {
-       echo 'No needs found.';
+       echo 'No circumstances found.';
      }
    }
 
