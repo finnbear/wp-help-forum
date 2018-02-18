@@ -37,7 +37,7 @@
    }
 
    function help_forum_uninstall() {
-
+     help_form_deactivate();
    }
 
    function help_forum_form() {
