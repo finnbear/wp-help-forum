@@ -7,7 +7,17 @@
    Author URI: https://www.finnbear.com
    */
 
-   defined( 'ABSPATH' ) or die( 'HelpForum not loaded by WordPress.' );
+  defined( 'ABSPATH' ) or die( 'HelpForum not loaded by WordPress.' );
+
+  function generateRandomString($length = 6) {
+     $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+     $charactersLength = strlen($characters);
+     $randomString = '';
+     for ($i = 0; $i < $length; $i++) {
+       $randomString .= $characters[rand(0, $charactersLength - 1)];
+     }
+     return $randomString;
+   }
 
    function help_forum_activate() {
      global $wpdb;
@@ -17,8 +27,11 @@
      $sql = "CREATE TABLE $table_name (
        id INTEGER NOT NULL AUTO_INCREMENT,
        dateCreated DATETIME NOT NULL,
-       title VARCHAR(50) NOT NULL,
-       description VARCHAR(500) NOT NULL,
+       title VARCHAR(51) NOT NULL,
+       beneficiary VARCHAR(101) NOT NULL,
+       need VARCHAR(501) NOT NULL,
+       contact VARCHAR(101) NOT NULL,
+       code VARCHAR(7) UNIQUE NOT NULL,
        views INTEGER NOT NULL DEFAULT 0,
        PRIMARY KEY  (id)
      ) $charset_collate;";
@@ -51,8 +64,16 @@
 		<input type="text" name="title" maxlength="50">
 	</div>
 	<div>
-		<label for="description"><strong>Description</strong></label>
-		<input type="text" name="description" maxlength="500">
+		<label for="beneficiary"><strong>Beneficiary</strong></label>
+		<input type="text" name="beneficiary" maxlength="100">
+	</div>
+	<div>
+		<label for="need"><strong>Need</strong></label>
+		<input type="text" name="need" maxlength="500">
+	</div>
+	<div>
+		<label for="contact"><strong>Contact</strong></label>
+		<input type="text" name="contact" maxlength="100">
 	</div>
 	<br>
 	<input type="submit" name="submit" value="Submit">
@@ -65,16 +86,24 @@
 
      if ( isset( $_POST['submit'] ) ) {
        $title = sanitize_text_field( $_POST['title'] );
-       $description = sanitize_text_field( $_POST['description'] );
+       $beneficiary = sanitize_text_field( $_POST['beneficiary'] );
+       $need = sanitize_text_field( $_POST['need'] );
+       $contact = sanitize_text_field( $_POST['contact'] );
 
        $table_name = $wpdb->prefix . 'helpforum';
+
+       $code = generateRandomString();
+       echo $code;
 
        $wpdb->insert(
          $table_name,
          array(
            'dateCreated' => current_time('mysql'),
            'title' => $title,
-           'description' => $description,
+           'beneficiary' => $beneficiary,
+           'need' => $need,
+           'contact' => $contact,
+           'code' => $code,
          )
        );
 
@@ -95,16 +124,16 @@
 
      $table_name = $wpdb->prefix . 'helpforum';
 
-     $sql = 'SELECT id, dateCreated, title, description FROM ' . $table_name . ';';
+     $sql = 'SELECT id, dateCreated, title, beneficiary, need FROM ' . $table_name . ';';
      $rows = $wpdb->get_results( $sql );
 
      echo '<h2>View Needs</h2>';
 
      if ( sizeof($rows) > 0 ) {
-       echo '<table><thead><tr><th>Date</th><th>Title</th><th>Description</th></tr></thead><tbody>';
+       echo '<table><thead><tr><th>Date</th><th>Title</th><th>Beneficiary</th><th>Need</th></tr></thead><tbody>';
 
        foreach ( $rows as $row ) {
-         echo '<tr><td>' . $row->dateCreated . '</td><td>' . $row->title . '</td><td>' . $row->description . '</td></tr>';
+         echo '<tr><td>' . $row->dateCreated . '</td><td>' . $row->title . '</td><td>' . $row->beneficiary . '</td><td>' . $row->need . '</td></tr>';
        }
 
        echo '</tbody></table>';
