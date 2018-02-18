@@ -232,7 +232,13 @@
        foreach ( $rows as $row ) {
          echo '<div style="display: flex; border: 1px solid #ccc; border-radius: 8px; margin-top: 5px;">';
          echo '<div style="width: 75%;">';
+         if ($row->status == 3) {
+           echo '<strike>';
+         }
          echo '<h3 style="margin: 5px;">' . $row->need . '</h3>';
+         if ($row->status == 3) {
+           echo '</strike>';
+         }
          echo '<p style="margin: 5px;">' . $row->circumstance . '</p>';
          echo '</div>';
 
