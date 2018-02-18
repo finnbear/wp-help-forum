@@ -9,16 +9,6 @@
 
   defined( 'ABSPATH' ) or die( 'HelpForum not loaded by WordPress.' );
 
-  function generateRandomString($length = 6) {
-     $characters = '123456789ABCDE';
-     $charactersLength = strlen($characters);
-     $randomString = '';
-     for ($i = 0; $i < $length; $i++) {
-       $randomString .= $characters[rand(0, $charactersLength - 1)];
-     }
-     return $randomString;
-   }
-
    function help_forum_activate() {
      global $wpdb;
 
@@ -38,7 +28,6 @@
        contactState VARCHAR(2),
        contactZip INTEGER,
        contactAddress VARCHAR(100),
-       code VARCHAR(6) UNIQUE NOT NULL,
        views INTEGER NOT NULL DEFAULT 0,
        PRIMARY KEY  (id)
      ) $charset_collate;";
@@ -63,24 +52,23 @@
    function help_forum_form() {
      $args = array();
 
-     echo '<h2>Submit a Need</h2>';
      echo '<form action"' . $_SERVER['REQUEST_URI'] . '" method="post">'
 ?>
 	<div>
 		<label for="need"><strong>What is needed?</strong></label>
-		<input type="text" name="need" maxlength="50">
+		<input type="text" name="need" maxlength="50" required>
 	</div>
 	<div>
 		<label for="beneficiary"><strong>Who is the beneficiary?</strong></label>
-		<input type="text" name="beneficiary" maxlength="100">
+		<input type="text" name="beneficiary" maxlength="100" required>
 	</div>
 	<div>
 		<label for="circumstance"><strong>What are the circumstances?</strong></label>
-		<textarea name="circumstance" maxlength="500"></textarea>
+		<textarea name="circumstance" maxlength="500" required></textarea>
 	</div>
 	<div>
 		<label for="contact"><strong>Contact information</strong></label>
-		<input type="text" name="contactName" maxlength="100">
+		<input type="text" name="contactName" maxlength="100" required>
 	</div>
 	<br>
 	<input type="submit" name="submit" value="Submit">
@@ -91,6 +79,8 @@
    function help_forum_form_handler() {
      global $wpdb;
 
+     echo '<h2>Submit a Need</h2>';
+
      if ( isset( $_POST['submit'] ) ) {
        $need = sanitize_text_field( $_POST['need'] );
        $beneficiary = sanitize_text_field( $_POST['beneficiary'] );
@@ -98,9 +88,6 @@
        $contactName = sanitize_text_field( $_POST['contactName'] );
 
        $table_name = $wpdb->prefix . 'helpforum';
-
-       $code = generateRandomString();
-       echo $code;
 
        $wpdb->insert(
          $table_name,
@@ -110,7 +97,6 @@
            'beneficiary' => $beneficiary,
            'circumstance' => $circumstance,
            'contactName' => $contactName,
-           'code' => $code,
          )
        );
 
@@ -137,13 +123,16 @@
      echo '<h2>View Needs</h2>';
 
      if ( sizeof($rows) > 0 ) {
-       echo '<table><thead><tr><th>Date</th><th>Need</th><th>Beneficiary</th><th>Circumstance</th></tr></thead><tbody>';
+       echo '<div>';
 
        foreach ( $rows as $row ) {
-         echo '<tr><td>' . $row->dateCreated . '</td><td>' . $row->need . '</td><td>' . $row->beneficiary . '</td><td>' . $row->circumstance . '</td></tr>';
+         echo '<div style="border: 1px solid #ccc; border-radius: 8px; margin-top: 5px;">';
+         echo '<h3 style="margin: 5px;">' . $row->need . '</h3>';
+         echo '<p style="margin: 5px;">' . $row->circumstance . '</p>';
+         echo '</div>';
        }
 
-       echo '</tbody></table>';
+       echo '</div>';
      } else {
        echo 'No circumstances found.';
      }
