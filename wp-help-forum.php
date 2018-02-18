@@ -63,7 +63,7 @@
    function help_forum_form() {
      $args = array();
 
-     echo '<h2>Create circumstance</h2>';
+     echo '<h2>Submit a Need</h2>';
      echo '<form action"' . $_SERVER['REQUEST_URI'] . '" method="post">'
 ?>
 	<div>
@@ -134,7 +134,7 @@
      $sql = 'SELECT id, dateCreated, need, beneficiary, circumstance FROM ' . $table_name . ';';
      $rows = $wpdb->get_results( $sql );
 
-     echo '<h2>View circumstances</h2>';
+     echo '<h2>View Needs</h2>';
 
      if ( sizeof($rows) > 0 ) {
        echo '<table><thead><tr><th>Date</th><th>Need</th><th>Beneficiary</th><th>Circumstance</th></tr></thead><tbody>';
