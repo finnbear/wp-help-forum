@@ -21,7 +21,9 @@
        need VARCHAR(50) NOT NULL,
        beneficiary VARCHAR(100) NOT NULL,
        circumstance VARCHAR(500) NOT NULL,
-       contactName VARCHAR(100) NOT NULL,
+       contactTitle VARCHAR(10) NOT NULL,
+       contactFirstName VARCHAR(50) NOT NULL,
+       contactLastName VARCHAR(50) NOT NULL,
        contactEmail VARCHAR(100),
        contactPhone VARCHAR(20),
        contactCity VARCHAR(50),
@@ -62,12 +64,23 @@
      echo '<input type="text" name="beneficiary" maxlength="100" required>';
      echo '</div>';
      echo '<div>';
-     echo '<label for="circumstance"><strong>What are the circumstances?</strong></label>';
+     echo '<label for="circumstance"><strong>What are the circumstances (and other details)?</strong></label>';
      echo '<textarea name="circumstance" maxlength="500" required></textarea>';
      echo '</div>';
      echo '<div>';
      echo '<label for="contactName"><strong>Contact name</strong></label>';
-     echo '<input type="text" name="contactName" maxlength="100" required>';
+     echo '<div name="contactName">';
+     echo '<input style="width: 32%; margin-right: 1%;" type="text" name="contactTitle" maxlength="10" placeholder="Title" list="contactTitles" required>';
+     echo '<datalist id="contactTitles">';
+     echo '<option value="Mr">';
+     echo '<option value="Mrs">';
+     echo '<option value="Ms">';
+     echo '<option value="Miss">';
+     echo '<option value="Mx">';
+     echo '</datalist>';
+     echo '<input style="width: 33%; margin-right: 1%;" type="text" name="contactFirstName" maxlength="50" placeholder="First" required>';
+     echo '<input style="width: 33%;" type="text" name="contactLastName" maxlength="50" placeholder="Last" required>';
+     echo '</div>';
      echo '</div>';
      echo '<div>';
      echo '<label for="contactEmail"><strong>Contact email</strong></label>';
@@ -95,7 +108,9 @@
        $need = sanitize_text_field( $_POST['need'] );
        $beneficiary = sanitize_text_field( $_POST['beneficiary'] );
        $circumstance = sanitize_textarea_field( $_POST['circumstance'] );
-       $contactName = sanitize_text_field( $_POST['contactName'] );
+       $contactTitle = sanitize_text_field( $_POST['contactTitle'] );
+       $contactFirstName = sanitize_text_field( $_POST['contactFirstName'] );
+       $contactLastName = sanitize_text_field( $_POST['contactLastName'] );
        $contactEmail = sanitize_email( $_POST['contactEmail'] );
        $contactPhone = sanitize_text_field( $_POST['contactPhone'] );
        $contactAddress = sanitize_text_field( $_POST['contactAddress'] );
@@ -109,7 +124,9 @@
            'need' => $need,
            'beneficiary' => $beneficiary,
            'circumstance' => $circumstance,
-           'contactName' => $contactName,
+           'contactTitle' => $contactTitle,
+           'contactFirstName' => $contactFirstName,
+           'contactLastName' => $contactLastName,
            'contactEmail' => $contactEmail,
            'contactPhone' => $contactPhone,
            'contactAddress' => $contactAddress,
