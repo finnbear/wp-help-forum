@@ -244,7 +244,7 @@
        echo '<div>';
 
        foreach ( $rows as $row ) {
-         echo '<div style="display: flex; border: 1px solid #ccc; border-radius: 8px; margin-top: 5px;">';
+         echo '<div style="display: flex; flex-wrap: wrap; border: 1px solid #ccc; border-radius: 8px; margin-top: 5px;">';
          echo '<div style="width: 75%;">';
          if ($row->status == 3) {
            echo '<strike>';
@@ -286,7 +286,11 @@
 
          if ($row->status == 1) {
            echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
+           echo '<button style="margin: 10px; width: 100%;" type="button" onclick="this.style.display=\'none\'; document.getElementById(\'helpDonorForm' . $row->id . '\').style.display=\'block\';" id="donorHelpButton' . $row->id . '">Help</button>';
+           echo '</div>';
+
            echo '<form style="display: none; margin: 10px; width: 100%;" id="helpDonorForm' . $row->id . '" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
+           echo '<h3>Enter Donor Information</h3>';
            echo '<input type="hidden" name="id" value="' . $row->id . '">';
            echo '<input type="hidden" name="action" value="help">';
            echo '<div>';
@@ -296,11 +300,11 @@
 
            help_forum_general_form_body('donor', 'Donor');
 
-           echo '<input type="submit" name="submit" value="Submit">';
-           echo '</form>';
-
-           echo '<button style="margin: 10px; width: 100%;" type="button" onclick="this.style.display=\'none\'; document.getElementById(\'helpDonorForm' . $row->id . '\').style.display=\'block\';">Help</button>';
+           echo '<div style="margin: 10px; width: 100%;">';
+           echo '<input style="margin-right: 5px;" type="submit" name="submit" value="Submit">';
+           echo '<button type="button" onclick="this.style.display=\'none\'; document.getElementById(\'donorHelpButton' . $row->id . '\').style.display=\'block\'; document.getElementById(\'helpDonorForm' . $row->id . '\').style.display=\'none\';">Cancel</button>';
            echo '</div>';
+           echo '</form>';
          }
 
          echo '</div>';
