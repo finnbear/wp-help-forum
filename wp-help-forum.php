@@ -26,10 +26,20 @@
        contactLastName VARCHAR(50) NOT NULL,
        contactEmail VARCHAR(100),
        contactPhone VARCHAR(20),
-       contactZip INTEGER,
+       contactAddress VARCHAR(100),
        contactCity VARCHAR(50),
        contactState VARCHAR(2),
-       contactAddress VARCHAR(100),
+       contactZip INTEGER,
+       donorComment VARCHAR(500),
+       donorTitle VARCHAR(10),
+       donorFirstName VARCHAR(50),
+       donorLastName VARCHAR(50),
+       donorEmail VARCHAR(100),
+       donorPhone VARCHAR(20),
+       donorAddress VARCHAR(100),
+       donorCity VARCHAR(50),
+       donorState VARCHAR(2),
+       donorZip INTEGER,
        views INTEGER NOT NULL DEFAULT 0,
        PRIMARY KEY  (id)
      ) $charset_collate;";
@@ -51,50 +61,34 @@
 
    }
 
-   function help_forum_form() {
-     $args = array();
-
-     echo '<form action"' . $_SERVER['REQUEST_URI'] . '" method="post">';
-     echo '<input type="hidden" name="action" value="new">';
+   function help_forum_general_form_body($person) {
      echo '<div>';
-     echo '<label for="need"><strong>What is needed? *</strong></label>';
-     echo '<input type="text" name="need" maxlength="50" required>';
-     echo '</div>';
-     echo '<div>';
-     echo '<label for="beneficiary"><strong>Who is the beneficiary? *</strong></label>';
-     echo '<input type="text" name="beneficiary" maxlength="100" required>';
-     echo '</div>';
-     echo '<div>';
-     echo '<label for="circumstance"><strong>What are the circumstances? *</strong></label>';
-     echo '<textarea name="circumstance" maxlength="500" required></textarea>';
-     echo '</div>';
-     echo '<div>';
-     echo '<label for="contactName"><strong>Contact name *</strong></label>';
-     echo '<div name="contactName">';
-     echo '<input style="width: 22%; margin-right: 1%;" type="text" name="contactTitle" maxlength="10" placeholder="Title" list="contactTitles" required>';
+     echo '<label for="' . $person . 'Name"><strong>Contact name *</strong></label>';
+     echo '<div name="' . $person . 'Name">';
+     echo '<input style="width: 22%; margin-right: 1%;" type="text" name="' . $person . 'Title" maxlength="10" placeholder="Title" list="contactTitles" required>';
      echo '<datalist id="contactTitles">';
      echo '<option value="Mr.">';
      echo '<option value="Ms.">';
      echo '<option value="Dr.">';
      echo '</datalist>';
-     echo '<input style="width: 38%; margin-right: 1%;" type="text" name="contactFirstName" maxlength="50" placeholder="First" required>';
-     echo '<input style="width: 38%;" type="text" name="contactLastName" maxlength="50" placeholder="Last" required>';
+     echo '<input style="width: 38%; margin-right: 1%;" type="text" name="' . $person . 'FirstName" maxlength="50" placeholder="First" required>';
+     echo '<input style="width: 38%;" type="text" name="' . $person . 'LastName" maxlength="50" placeholder="Last" required>';
      echo '</div>';
      echo '</div>';
      echo '<div>';
-     echo '<label for="contactEmail"><strong>Contact email</strong></label>';
-     echo '<input type="email" name="contactEmail" maxlength="100">';
+     echo '<label for="' . $person . 'Email"><strong>Contact email</strong></label>';
+     echo '<input type="email" name="' . $person . 'Email" maxlength="100">';
      echo '</div>';
      echo '<div>';
-     echo '<label for="contactPhone"><strong>Contact phone</strong></label>';
-     echo '<input type="tel" name="contactPhone" maxlength="20">';
+     echo '<label for="' . $person . 'Phone"><strong>Contact phone</strong></label>';
+     echo '<input type="tel" name="' . $person . 'Phone" maxlength="20">';
      echo '</div>';
      echo '<div>';
-     echo '<label for="contactAddress"><strong>Contact address</strong></label>';
-     echo '<input style="margin-bottom: 5px;" type="text" name="contactAddress" maxlength="100" placeholder="Address">';
+     echo '<label for="' . $person . 'Address"><strong>Contact address</strong></label>';
+     echo '<input style="margin-bottom: 5px;" type="text" name="' . $person . 'Address" maxlength="100" placeholder="Address">';
      echo '<div>';
-     echo '<input style="width: 40%; margin-right: 1%;" type="text" name="contactCity" maxlength="50" placeholder="City">';
-     echo '<input style="width: 29%; margin-right: 1%;" type="text" name="contactState" maxlength="2" list="contactStates" placeholder="State">';
+     echo '<input style="width: 40%; margin-right: 1%;" type="text" name="' . $person . 'City" maxlength="50" placeholder="City">';
+     echo '<input style="width: 29%; margin-right: 1%;" type="text" name="' . $person . 'State" maxlength="2" list="contactStates" placeholder="State">';
      echo '<datalist id="contactStates">';
      echo '<option value="AL">';
      echo '<option value="AK">';
@@ -147,10 +141,30 @@
      echo '<option value="WY">';
      echo '</datalist>';
      echo '<style>input[type=number] { -moz-appearance: textfield; } input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }</style>';
-     echo '<input style="width: 29%;" type="number" name="contactZip" maxlength="10" placeholder="Zip">';
+     echo '<input style="width: 29%;" type="number" name="' . $person . 'Zip" maxlength="10" placeholder="Zip">';
      echo '</div>';
      echo '</div>';
      echo '<br>';
+   }
+
+   function help_forum_form() {
+     echo '<form action"' . $_SERVER['REQUEST_URI'] . '" method="post">';
+     echo '<input type="hidden" name="action" value="new">';
+     echo '<div>';
+     echo '<label for="need"><strong>What is needed? *</strong></label>';
+     echo '<input type="text" name="need" maxlength="50" required>';
+     echo '</div>';
+     echo '<div>';
+     echo '<label for="beneficiary"><strong>Who is the beneficiary? *</strong></label>';
+     echo '<input type="text" name="beneficiary" maxlength="100" required>';
+     echo '</div>';
+     echo '<div>';
+     echo '<label for="circumstance"><strong>What are the circumstances? *</strong></label>';
+     echo '<textarea name="circumstance" maxlength="500" required></textarea>';
+     echo '</div>';
+
+     help_forum_general_form_body('contact');
+
      echo '<input type="submit" name="submit" value="Submit">';
      echo '</form>';
    }
@@ -272,12 +286,20 @@
 
          if ($row->status == 1) {
            echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
-           echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
+           echo '<form style="display: none; margin: 10px; width: 100%;" id="helpDonorForm' . $row->id . '" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
            echo '<input type="hidden" name="id" value="' . $row->id . '">';
            echo '<input type="hidden" name="action" value="help">';
-           echo '<button style="display: none;" id="helpSubmit' . $row->id . '" name="submit">Submit</button>';
-           echo '<button type="button" onclick="this.style.display=\'none\'; document.getElementById(\'helpSubmit' . $row->id . '\').style.display=\'block\';">Help</button>';
+           echo '<div>';
+           echo '<label for="donorComment"><strong>Any comments? *</strong></label>';
+           echo '<textarea name="donorComment" maxlength="500" required></textarea>';
+           echo '</div>';
+
+           help_forum_general_form_body('donor');
+
+           echo '<input type="submit" name="submit" value="Submit">';
            echo '</form>';
+
+           echo '<button style="margin: 10px; width: 100%;" type="button" onclick="this.style.display=\'none\'; document.getElementById(\'helpDonorForm' . $row->id . '\').style.display=\'block\';">Help</button>';
            echo '</div>';
          }
 
