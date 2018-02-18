@@ -209,9 +209,18 @@
    function help_forum_list() {
      global $wpdb;
 
+     $admin = current_user_can( 'edit_posts' );
+
      $table_name = $wpdb->prefix . 'helpforum';
 
-     $sql = 'SELECT id, dateCreated, need, beneficiary, circumstance FROM ' . $table_name . ';';
+     $sql = '';
+
+     if ($admin) {
+       $sql = 'SELECT id, dateCreated, need, beneficiary, circumstance FROM ' . $table_name . ';';
+     } else {
+       $sql = 'SELECT id, dateCreated, need, circumstance FROM ' . $table_name . ' WHERE status = 1;';
+     }
+
      $rows = $wpdb->get_results( $sql );
 
      echo '<h2>View Needs</h2>';
@@ -221,13 +230,30 @@
 
        foreach ( $rows as $row ) {
          echo '<div style="display: flex; border: 1px solid #ccc; border-radius: 8px; margin-top: 5px;">';
-         echo '<div style="width: 85%;">';
+         echo '<div style="width: 75%;">';
          echo '<h3 style="margin: 5px;">' . $row->need . '</h3>';
          echo '<p style="margin: 5px;">' . $row->circumstance . '</p>';
          echo '</div>';
-         echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
-         echo '<button style="margin: 10px; width: 100%;">Help</button>';
-         echo '</div>';
+         if ($row->status == 0) {
+           echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
+           echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
+           echo '<input type="hidden" name="id" value="' . $row->id . '">';
+           echo '<input type="hidden" name="action" value="accept">';
+           echo '<button>Accept</button>';
+           echo '</form>';
+           echo '</div>';
+
+           echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
+           echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
+           echo '<input type="hidden" name="id" value="' . $row->id . '">';
+           echo '<input type="hidden" name="action" value="reject">';
+           echo '<button>Reject</button>';
+           echo '</form>';
+           echo '</div>';
+         } else if ($row->status == 1) {
+
+         }
+
          echo '</div>';
        }
 
