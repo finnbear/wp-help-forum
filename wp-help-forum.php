@@ -249,11 +249,11 @@
          if ($row->status == 3) {
            echo '<strike>';
          }
-         echo '<h3 style="margin: 5px;">' . $row->need . '</h3>';
+         echo '<h3 style="margin: 5px;">' . str_replace( '\\', '', $row->need ) . '</h3>';
          if ($row->status == 3) {
            echo '</strike>';
          }
-         echo '<p style="margin: 5px;">' . $row->circumstance . '</p>';
+         echo '<p style="margin: 5px;">' . str_replace( '\\', '', $row->circumstance ) . '</p>';
          echo '</div>';
 
          if ($admin) {
