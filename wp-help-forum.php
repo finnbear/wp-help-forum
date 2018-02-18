@@ -55,6 +55,7 @@
      $args = array();
 
      echo '<form action"' . $_SERVER['REQUEST_URI'] . '" method="post">';
+     echo '<input type="hidden" name="action" value="new">';
      echo '<div>';
      echo '<label for="need"><strong>What is needed? *</strong></label>';
      echo '<input type="text" name="need" maxlength="50" required>';
@@ -159,7 +160,7 @@
 
      echo '<h2>Submit a Need</h2>';
 
-     if ( isset( $_POST['submit'] ) ) {
+     if ( isset( $_POST['submit'] ) and $_POST['action'] == "new" ) {
        $need = sanitize_text_field( $_POST['need'] );
        $beneficiary = sanitize_text_field( $_POST['beneficiary'] );
        $circumstance = sanitize_textarea_field( $_POST['circumstance'] );
@@ -234,7 +235,8 @@
          echo '<h3 style="margin: 5px;">' . $row->need . '</h3>';
          echo '<p style="margin: 5px;">' . $row->circumstance . '</p>';
          echo '</div>';
-         if ($row->status == 0) {
+
+         if ($admin) {
            echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
            echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
            echo '<input type="hidden" name="id" value="' . $row->id . '">';
@@ -250,15 +252,15 @@
            echo '<button name="submit">Reject</button>';
            echo '</form>';
            echo '</div>';
-         } else if ($row->status == 1) {
-           echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
-           echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
-           echo '<input type="hidden" name="id" value="' . $row->id . '">';
-           echo '<input type="hidden" name="action" value="help">';
-           echo '<button name="submit">Help</button>';
-           echo '</form>';
-           echo '</div>';
          }
+
+         echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
+         echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
+         echo '<input type="hidden" name="id" value="' . $row->id . '">';
+         echo '<input type="hidden" name="action" value="help">';
+         echo '<button name="submit">Help</button>';
+         echo '</form>';
+         echo '</div>';
 
          echo '</div>';
        }
@@ -274,22 +276,26 @@
 
         $table_name = $wpdb->prefix . 'helpforum';
 
-        if ( isset( $_POST['submit] ) ) {
+        if ( isset( $_POST['submit'] ) ) {
           $id = sanitize_text_field( $_POST['id'] );
           $action = sanitize_text_field( $_POST['action'] );
 
-          $status = 0;
-
           if ($action == "help") {
 
-          } else if ( $action == "accept" and current_user_can( 'edit_posts') ) {
-            $status = 1;
-          } else if ( $action == "reject" and current_user_can( 'edit_posts' ) ) {
-            $status = 3;
-          }
+          } else if (current_user_can( 'edit_posts' ) ) {
+            $status = 0;
 
-          $sql = 'UPDATE ' . $table_name . ' SET status = ' . $status . ' WHERE id = ' . $id . ';';
-          $wpdb->query( $sql );
+            if ( $action == "accept" ) {
+              $status = 1;
+            } else if ( $action == "reject" ) {
+              $status = 3;
+            }
+
+            if ($status != 0) {
+              $sql = 'UPDATE ' . $table_name . ' SET status = ' . $status . ' WHERE id = ' . $id . ';';
+              $wpdb->query( $sql );
+            }
+          }
         }
 
 	help_forum_list();
