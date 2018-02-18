@@ -52,28 +52,26 @@
    function help_forum_form() {
      $args = array();
 
-     echo '<form action"' . $_SERVER['REQUEST_URI'] . '" method="post">'
-?>
-	<div>
-		<label for="need"><strong>What is needed?</strong></label>
-		<input type="text" name="need" maxlength="50" required>
-	</div>
-	<div>
-		<label for="beneficiary"><strong>Who is the beneficiary?</strong></label>
-		<input type="text" name="beneficiary" maxlength="100" required>
-	</div>
-	<div>
-		<label for="circumstance"><strong>What are the circumstances?</strong></label>
-		<textarea name="circumstance" maxlength="500" required></textarea>
-	</div>
-	<div>
-		<label for="contact"><strong>Contact information</strong></label>
-		<input type="text" name="contactName" maxlength="100" required>
-	</div>
-	<br>
-	<input type="submit" name="submit" value="Submit">
-</form>
-<?php
+     echo '<form action"' . $_SERVER['REQUEST_URI'] . '" method="post">';
+     echo '<div>';
+     echo '<label for="need"><strong>What is needed?</strong></label>';
+     echo '<input type="text" name="need" maxlength="50" required>';
+     echo '</div>';
+     echo '<div>';
+     echo '<label for="beneficiary"><strong>Who is the beneficiary?</strong></label>';
+     echo '<input type="text" name="beneficiary" maxlength="100" required>';
+     echo '</div>';
+     echo '<div>';
+     echo '<label for="circumstance"><strong>What are the circumstances?</strong></label>';
+     echo '<textarea name="circumstance" maxlength="500" required></textarea>';
+     echo '</div>';
+     echo '<div>';
+     echo '<label for="contact"><strong>Contact information</strong></label>';
+     echo '<input type="text" name="contactName" maxlength="100" required>';
+     echo '</div>';
+     echo '<br>';
+     echo '<input type="submit" name="submit" value="Submit">';
+     echo '</form>';
    }
 
    function help_forum_form_handler() {
@@ -100,7 +98,7 @@
          )
        );
 
-       echo '<p><strong>Posted.</strong></p>';
+       echo '<p><strong>Need posted, pending approval.</strong></p>';
      } else {
        help_forum_form();
      }
