@@ -217,9 +217,9 @@
      $sql = '';
 
      if ($admin) {
-       $sql = 'SELECT id, dateCreated, need, beneficiary, circumstance FROM ' . $table_name . ';';
+       $sql = 'SELECT id, dateCreated, status, need, beneficiary, circumstance FROM ' . $table_name . ';';
      } else {
-       $sql = 'SELECT id, dateCreated, need, circumstance FROM ' . $table_name . ' WHERE status = 1;';
+       $sql = 'SELECT id, dateCreated, status, need, circumstance FROM ' . $table_name . ' WHERE status = 1;';
      }
 
      $rows = $wpdb->get_results( $sql );
@@ -237,30 +237,36 @@
          echo '</div>';
 
          if ($admin) {
-           echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
-           echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
-           echo '<input type="hidden" name="id" value="' . $row->id . '">';
-           echo '<input type="hidden" name="action" value="accept">';
-           echo '<button name="submit">Accept</button>';
-           echo '</form>';
-           echo '</div>';
+           if ($row->status != 1) {
+             echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
+             echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
+             echo '<input type="hidden" name="id" value="' . $row->id . '">';
+             echo '<input type="hidden" name="action" value="accept">';
+             echo '<button name="submit">Accept</button>';
+             echo '</form>';
+             echo '</div>';
+           }
 
+           if ($row->status != 3) {
+             echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
+             echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
+             echo '<input type="hidden" name="id" value="' . $row->id . '">';
+             echo '<input type="hidden" name="action" value="reject">';
+             echo '<button name="submit">Reject</button>';
+             echo '</form>';
+             echo '</div>';
+           }
+         }
+
+         if ($row->status == 1) {
            echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
            echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
            echo '<input type="hidden" name="id" value="' . $row->id . '">';
-           echo '<input type="hidden" name="action" value="reject">';
-           echo '<button name="submit">Reject</button>';
+           echo '<input type="hidden" name="action" value="help">';
+           echo '<button name="submit">Help</button>';
            echo '</form>';
            echo '</div>';
          }
-
-         echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
-         echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
-         echo '<input type="hidden" name="id" value="' . $row->id . '">';
-         echo '<input type="hidden" name="action" value="help">';
-         echo '<button name="submit">Help</button>';
-         echo '</form>';
-         echo '</div>';
 
          echo '</div>';
        }
