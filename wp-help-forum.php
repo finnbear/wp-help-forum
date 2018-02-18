@@ -275,7 +275,8 @@
            echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
            echo '<input type="hidden" name="id" value="' . $row->id . '">';
            echo '<input type="hidden" name="action" value="help">';
-           echo '<button name="submit">Help</button>';
+           echo '<button style="display: none;" id="helpSubmit" name="submit">Submit</button>';
+           echo '<button type="button" onclick="this.style.display=\'none\'; document.getElementById(\'helpSubmit\').style.display=\'block\';">Help</button>';
            echo '</form>';
            echo '</div>';
          }
