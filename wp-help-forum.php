@@ -61,9 +61,9 @@
 
    }
 
-   function help_forum_general_form_body($person) {
+   function help_forum_general_form_body($person, $personProper) {
      echo '<div>';
-     echo '<label for="' . $person . 'Name"><strong>Contact name *</strong></label>';
+     echo '<label for="' . $person . 'Name"><strong>' . $personProper . ' name *</strong></label>';
      echo '<div name="' . $person . 'Name">';
      echo '<input style="width: 22%; margin-right: 1%;" type="text" name="' . $person . 'Title" maxlength="10" placeholder="Title" list="contactTitles" required>';
      echo '<datalist id="contactTitles">';
@@ -76,15 +76,15 @@
      echo '</div>';
      echo '</div>';
      echo '<div>';
-     echo '<label for="' . $person . 'Email"><strong>Contact email</strong></label>';
+     echo '<label for="' . $person . 'Email"><strong>' . $personProper . ' email</strong></label>';
      echo '<input type="email" name="' . $person . 'Email" maxlength="100">';
      echo '</div>';
      echo '<div>';
-     echo '<label for="' . $person . 'Phone"><strong>Contact phone</strong></label>';
+     echo '<label for="' . $person . 'Phone"><strong>' . $personProper . ' phone</strong></label>';
      echo '<input type="tel" name="' . $person . 'Phone" maxlength="20">';
      echo '</div>';
      echo '<div>';
-     echo '<label for="' . $person . 'Address"><strong>Contact address</strong></label>';
+     echo '<label for="' . $person . 'Address"><strong>' . $personProper . ' address</strong></label>';
      echo '<input style="margin-bottom: 5px;" type="text" name="' . $person . 'Address" maxlength="100" placeholder="Address">';
      echo '<div>';
      echo '<input style="width: 40%; margin-right: 1%;" type="text" name="' . $person . 'City" maxlength="50" placeholder="City">';
@@ -163,7 +163,7 @@
      echo '<textarea name="circumstance" maxlength="500" required></textarea>';
      echo '</div>';
 
-     help_forum_general_form_body('contact');
+     help_forum_general_form_body('contact', 'Contact');
 
      echo '<input type="submit" name="submit" value="Submit">';
      echo '</form>';
@@ -290,11 +290,11 @@
            echo '<input type="hidden" name="id" value="' . $row->id . '">';
            echo '<input type="hidden" name="action" value="help">';
            echo '<div>';
-           echo '<label for="donorComment"><strong>Any comments? *</strong></label>';
-           echo '<textarea name="donorComment" maxlength="500" required></textarea>';
+           echo '<label for="donorComment"><strong>Any comments?</strong></label>';
+           echo '<textarea name="donorComment" maxlength="500"></textarea>';
            echo '</div>';
 
-           help_forum_general_form_body('donor');
+           help_forum_general_form_body('donor', 'Donor');
 
            echo '<input type="submit" name="submit" value="Submit">';
            echo '</form>';
@@ -321,21 +321,21 @@
           $id = sanitize_text_field( $_POST['id'] );
           $action = sanitize_text_field( $_POST['action'] );
 
+          $status = 0;
+
           if ($action == "help") {
-
+            $status = 2;
           } else if (current_user_can( 'edit_posts' ) ) {
-            $status = 0;
-
             if ( $action == "accept" ) {
               $status = 1;
             } else if ( $action == "reject" ) {
               $status = 3;
             }
+          }
 
-            if ($status != 0) {
-              $sql = 'UPDATE ' . $table_name . ' SET status = ' . $status . ' WHERE id = ' . $id . ';';
-              $wpdb->query( $sql );
-            }
+          if ($status != 0) {
+            $sql = 'UPDATE ' . $table_name . ' SET status = ' . $status . ' WHERE id = ' . $id . ';';
+            $wpdb->query( $sql );
           }
         }
 
