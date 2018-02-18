@@ -37,7 +37,7 @@
    }
 
    function help_forum_uninstall() {
-     help_form_deactivate();
+
    }
 
    function help_forum_form() {
@@ -99,13 +99,18 @@
      $rows = $wpdb->get_results( $sql );
 
      echo '<h2>View Needs</h2>';
-     echo '<table><thead><tr><th>Date</th><th>Title</th><th>Description</th></tr></thead><tbody>';
 
-     foreach ( $rows as $row ) {
-       echo '<tr><td>' . $row->dateCreated . '</td><td>' . $row->title . '</td><td>' . $row->description . '</td></tr>';
+     if ( sizeof($rows) > 0 ) {
+       echo '<table><thead><tr><th>Date</th><th>Title</th><th>Description</th></tr></thead><tbody>';
+
+       foreach ( $rows as $row ) {
+         echo '<tr><td>' . $row->dateCreated . '</td><td>' . $row->title . '</td><td>' . $row->description . '</td></tr>';
+       }
+
+       echo '</tbody></table>';
+     } else {
+       echo 'No needs found.';
      }
-
-     echo '</tbody></table>';
    }
 
    function help_forum_list_handler() {
