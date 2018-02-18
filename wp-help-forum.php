@@ -87,11 +87,24 @@
    }
 
    function help_forum_list() {
+     global $wpdb;
 
+     $table_name = $wpdb->prefix . 'helpforum';
+
+     $sql = 'SELECT id, title, description FROM ' . $table_name . ';';
+     $rows = $wpdb->get_results( $sql );
+
+     echo '<table><thead><tr><th>#</th><th>Title</th><th>Description</th></tr></thead><tbody>';
+
+     foreach ( $rows as $row ) {
+       echo '<tr><td>' . $row->id . '</td><td>' . $row->title . '</td><td>' . $row->description . '</td></tr>';
+     }
+
+     echo '</tbody></table>';
    }
 
    function help_forum_list_handler() {
-
+	help_forum_list();
    }
 
    function help_forum_list_shortcode() {
