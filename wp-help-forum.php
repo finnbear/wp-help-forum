@@ -308,15 +308,75 @@
            echo '</form>';
          } else if ($row->status == 2 and current_user_can('edit_posts')) {
            echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
-           echo '<button style="margin: 10px; width: 100%;" type="button" onclick="this.style.display=\'none\'; document.getElementById(\'helpDonorDetails' . $row->id . '\').style.display=\'block\';" id="donorDetailsButton' . $row-> id . '">Donor Details</button>';
+           echo '<button style="margin: 10px; width: 100%;" type="button" onclick="this.style.display=\'none\'; document.getElementById(\'transactionDetails' . $row->id . '\').style.display=\'block\';" id="transactionDetailsButton' . $row-> id . '">Transaction Details</button>';
            echo '</div>';
 
-           echo '<div style="display: none; margin: 10px; width: 100%;" id="helpDonorDetails' . $row->id . '">';
-           echo '<h3>Donor Details</h3>';
-           echo '<p><strong>First name:</strong> ' . $row.donorFirstName . '</p>';
+           echo '<div style="display: none; margin: 10px; width: 100%;" id="transactionDetails' . $row->id . '">';
+           echo '<h3>Transaction Details</h3>';
+
+           echo '<table>';
+           echo '<thead>';
+           echo '<tr>';
+           echo '<th>Field</th>';
+           echo '<th>Contact</th>';
+           echo '<th>Donor</th>';
+           echo '</tr>';
+           echo '</thead>';
+           echo '<tbody>';
+           echo '<tr>';
+           echo '<td>Title</td>';
+           echo '<td>' . $row->contactTitle . '</td>';
+           echo '<td>' . $row->donorTitle . '</td>';
+           echo '</tr>';
+           echo '<tr>';
+           echo '<td>First name</td>';
+           echo '<td>' . $row->contactFirstName . '</td>';
+           echo '<td>' . $row->donorFirstName . '</td>';
+           echo '</tr>';
+           echo '<tr>';
+           echo '<td>Last name</td>';
+           echo '<td>' . $row->contactLastName . '</td>';
+           echo '<td>' . $row->donorLastName . '</td>';
+           echo '</tr>';
+           echo '<tr>';
+           echo '<td>Email</td>';
+           echo '<td>' . $row->contactEmail . '</td>';
+           echo '<td>' . $row->donorEmail . '</td>';
+           echo '</tr>';
+           echo '<tr>';
+           echo '<td>Phone</td>';
+           echo '<td>' . $row->contactPhone . '</td>';
+           echo '<td>' . $row->donorPhone . '</td>';
+           echo '</tr>';
+           echo '<tr>';
+           echo '<td>Address</td>';
+           echo '<td>' . $row->contactAddress . '</td>';
+           echo '<td>' . $row->donorAddress . '</td>';
+           echo '</tr>';
+           echo '<tr>';
+           echo '<td>City</td>';
+           echo '<td>' . $row->contactCity . '</td>';
+           echo '<td>' . $row->donorCity . '</td>';
+           echo '</tr>';
+           echo '<tr>';
+           echo '<td>State</td>';
+           echo '<td>' . $row->contactState . '</td>';
+           echo '<td>' . $row->donorState . '</td>';
+           echo '</tr>';
+           echo '<tr>';
+           echo '<td>Zip</td>';
+           echo '<td>' . $row->contactZip . '</td>';
+           echo '<td>' . $row->donorZip . '</td>';
+           echo '</tr>';
+           echo '<tr>';
+           echo '</tbody>';
+           echo '</table>';
+
+           echo '<h3>Donor Comment</h3>';
+           echo '<p>' . $row->donorComment . '</p>';
 
            echo '<div style="margin: 10px; width: 100%;">';
-           echo '<button type="button" onclick="document.getElementById(\'donorDetailsButton' . $row->id . '\').style.display = \'block\'; document.getElementById(\'helpDonorDetails' . $row->id . '\').style.display=\'none\';">Close</button>';
+           echo '<button type="button" onclick="document.getElementById(\'transactionDetailsButton' . $row->id . '\').style.display = \'block\'; document.getElementById(\'transactionDetails' . $row->id . '\').style.display=\'none\';">Close</button>';
            echo '</div>';
            echo '</div>';
          }
@@ -354,7 +414,7 @@
             $donorState = sanitize_text_field( strtoupper( $_POST['donorState'] ) );
             $donorComment = sanitize_textarea_field( $_POST['donorComment'] );
 
-            $sql = 'UPDATE ' . $_table_name . ' SET donorTitle = "' . $donorTitle . '",
+            $sql = 'UPDATE ' . $table_name . ' SET donorTitle = "' . $donorTitle . '",
                                                     donorFirstName = "' . $donorFirstName . '",
                                                     donorLastName = "' . $donorLastName . '",
                                                     donorEmail = "' . $donorEmail . '",
