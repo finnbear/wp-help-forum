@@ -245,7 +245,7 @@
 
        foreach ( $rows as $row ) {
          echo '<div style="display: flex; flex-wrap: wrap; border: 1px solid #ccc; border-radius: 8px; margin-top: 5px;">';
-         echo '<div style="width: 75%;">';
+         echo '<div style="width: 60%;">';
          if ($row->status == 3) {
            echo '<strike>';
          }
@@ -288,7 +288,7 @@
              echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post" id="donorRejectForm' . $row->id . '">';
              echo '<input type="hidden" name="id" value="' . $row->id . '">';
              echo '<input type="hidden" name="action" value="complete">';
-             echo '<button name="submit">Complete</button>';
+             echo '<button name="submit">Mark Completed</button>';
              echo '</form>';
              echo '</div>';
            }
@@ -298,7 +298,7 @@
              echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post" id="donorRejectForm' . $row->id . '">';
              echo '<input type="hidden" name="id" value="' . $row->id . '">';
              echo '<input type="hidden" name="action" value="reopen">';
-             echo '<button name="submit">Re-open</button>';
+             echo '<button name="submit">Mark In-complete</button>';
              echo '</form>';
              echo '</div>';
            }
