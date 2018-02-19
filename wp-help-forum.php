@@ -331,7 +331,10 @@
            echo '<button style="margin: 10px; width: 100%;" type="button" onclick="this.style.display=\'none\'; document.getElementById(\'transactionDetails' . $row->id . '\').style.display=\'block\';" id="transactionDetailsButton' . $row-> id . '">Transaction Details</button>';
            echo '</div>';
 
-           echo '<div style="display: none; margin: 10px; width: 100%;" id="transactionDetails' . $row->id . '">';
+           echo '<form style="display: none; margin: 10px; width: 100%;" id="transactionDetails' . $row->id . '" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
+
+           echo '<input type="hidden" name="id" value="' . $row->id . '">';
+           echo '<input type="hidden" name="action" value="update">';
 
            echo '<h3>Contact Details</h3>';
            help_forum_general_form_body("contact", "Contact", $row->contactTitle, $row->contactFirstName, $row->contactLastName, $row->contactEmail, $row->contactPhone, $row->contactAddress, $row->contactCity, $row->contactState, $row->contactZip);
@@ -343,9 +346,10 @@
            echo '<p>' . $row->donorComment . '</p>';
 
            echo '<div style="margin: 10px; width: 100%;">';
+           echo '<input style="margin-right: 5px;" type="submit" name="submit" value="Update">';
            echo '<button type="button" onclick="document.getElementById(\'transactionDetailsButton' . $row->id . '\').style.display = \'block\'; document.getElementById(\'transactionDetails' . $row->id . '\').style.display=\'none\';">Close</button>';
            echo '</div>';
-           echo '</div>';
+           echo '</form>';
          }
 
 
@@ -400,6 +404,49 @@
               $status = 1;
             } else if ( $action == "reject" ) {
               $status = 3;
+            } else if ($action == "update") {
+              $contactTitle = sanitize_text_field( $_POST['contactTitle'] );
+              $contactFirstName = sanitize_text_field( $_POST['contactFirstName'] );
+              $contactLastName = sanitize_text_field( $_POST['contactLastName'] );
+              $contactEmail = sanitize_email( $_POST['contactEmail'] );
+              $contactPhone = sanitize_text_field( $_POST['contactPhone'] );
+              $contactAddress = sanitize_text_field( $_POST['contactAddress'] );
+              $contactZip = sanitize_text_field( $_POST['contactZip'] );
+              $contactCity = sanitize_text_field( $_POST['contactCity'] );
+              $contactState = sanitize_text_field( strtoupper( $_POST['contactState'] ) );
+              $contactComment = sanitize_textarea_field( $_POST['contactComment'] );
+
+              $donorFirstName = sanitize_text_field( $_POST['donorFirstName'] );
+              $donorLastName = sanitize_text_field( $_POST['donorLastName'] );
+              $donorEmail = sanitize_email( $_POST['donorEmail'] );
+              $donorPhone = sanitize_text_field( $_POST['donorPhone'] );
+              $donorAddress = sanitize_text_field( $_POST['donorAddress'] );
+              $donorZip = sanitize_text_field( $_POST['donorZip'] );
+              $donorCity = sanitize_text_field( $_POST['donorCity'] );
+              $donorState = sanitize_text_field( strtoupper( $_POST['donorState'] ) );
+              $donorComment = sanitize_textarea_field( $_POST['donorComment'] );
+
+              $sql = 'UPDATE ' . $table_name . ' SET contactTitle = "' . $contactTitle . '",
+                                                      contactFirstName = "' . $contactFirstName . '",
+                                                      contactLastName = "' . $contactLastName . '",
+                                                      contactEmail = "' . $contactEmail . '",
+                                                      contactPhone = "' . $contactPhone . '",
+                                                      contactAddress = "' . $contactAddress . '",
+                                                      contactZip = "' . $contactZip . '",
+                                                      contactCity = "' . $contactCity . '",
+                                                      contactState = "' . $contactState . '",
+                                                      donorTitle = "' . $donorTitle . '",
+                                                      donorFirstName = "' . $donorFirstName . '",
+                                                      donorLastName = "' . $donorLastName . '",
+                                                      donorEmail = "' . $donorEmail . '",
+                                                      donorPhone = "' . $donorPhone . '",
+                                                      donorAddress = "' . $donorAddress . '",
+                                                      donorZip = "' . $donorZip . '",
+                                                      donorCity = "' . $donorCity . '",
+                                                      donorState = "' . $donorState . '",
+                                                      donorComment = "' . $donorComment . '"
+                                                  WHERE id = ' . $id . ';';
+              $wpdb->query( $sql );
             } else if ( $action == "complete" ) {
               $status = 4;
             } else if ( $action == "reopen" ) {
