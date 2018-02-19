@@ -399,15 +399,15 @@
             $donorComment = sanitize_textarea_field( $_POST['donorComment'] );
 
             $sql = 'UPDATE ' . $table_name . ' SET donorTitle = "' . $donorTitle . '",
-                                                    donorFirstName = "' . $donorFirstName . '",
-                                                    donorLastName = "' . $donorLastName . '",
-                                                    donorEmail = "' . $donorEmail . '",
-                                                    donorPhone = "' . $donorPhone . '",
-                                                    donorAddress = "' . $donorAddress . '",
-                                                    donorZip = "' . $donorZip . '",
-                                                    donorCity = "' . $donorCity . '",
-                                                    donorState = "' . $donorState . '",
-                                                    donorComment = "' . $donorComment . '"
+                                                   donorFirstName = "' . $donorFirstName . '",
+                                                   donorLastName = "' . $donorLastName . '",
+                                                   donorEmail = "' . $donorEmail . '",
+                                                   donorPhone = "' . $donorPhone . '",
+                                                   donorAddress = "' . $donorAddress . '",
+                                                   donorZip = "' . $donorZip . '",
+                                                   donorCity = "' . $donorCity . '",
+                                                   donorState = "' . $donorState . '",
+                                                   donorComment = "' . $donorComment . '"
                                                 WHERE id = ' . $id . ';';
             $wpdb->query( $sql );
 
@@ -419,6 +419,19 @@
               $status = 3;
             } else if ( $action == "rejectdonor" ) {
               $status = 1;
+
+              $sql = 'UPDATE ' . $table_name . ' SET donorTitle = "",
+                                                     donorFirstName = "",
+                                                     donorLastName = "",
+                                                     donorEmail = "",
+                                                     donorPhone = "",
+                                                     donorAddress = "",
+                                                     donorZip = "",
+                                                     donorCity = "",
+                                                     donorState = "",
+                                                     donorComment = ""
+                                                  WHERE id = ' . $id . ';';
+              $wpdb->query( $sql );
             } else if ($action == "update") {
               $contactTitle = sanitize_text_field( $_POST['contactTitle'] );
               $contactFirstName = sanitize_text_field( $_POST['contactFirstName'] );
@@ -442,24 +455,24 @@
               $donorComment = sanitize_textarea_field( $_POST['donorComment'] );
 
               $sql = 'UPDATE ' . $table_name . ' SET contactTitle = "' . $contactTitle . '",
-                                                      contactFirstName = "' . $contactFirstName . '",
-                                                      contactLastName = "' . $contactLastName . '",
-                                                      contactEmail = "' . $contactEmail . '",
-                                                      contactPhone = "' . $contactPhone . '",
-                                                      contactAddress = "' . $contactAddress . '",
-                                                      contactZip = "' . $contactZip . '",
-                                                      contactCity = "' . $contactCity . '",
-                                                      contactState = "' . $contactState . '",
-                                                      donorTitle = "' . $donorTitle . '",
-                                                      donorFirstName = "' . $donorFirstName . '",
-                                                      donorLastName = "' . $donorLastName . '",
-                                                      donorEmail = "' . $donorEmail . '",
-                                                      donorPhone = "' . $donorPhone . '",
-                                                      donorAddress = "' . $donorAddress . '",
-                                                      donorZip = "' . $donorZip . '",
-                                                      donorCity = "' . $donorCity . '",
-                                                      donorState = "' . $donorState . '",
-                                                      donorComment = "' . $donorComment . '"
+                                                     contactFirstName = "' . $contactFirstName . '",
+                                                     contactLastName = "' . $contactLastName . '",
+                                                     contactEmail = "' . $contactEmail . '",
+                                                     contactPhone = "' . $contactPhone . '",
+                                                     contactAddress = "' . $contactAddress . '",
+                                                     contactZip = "' . $contactZip . '",
+                                                     contactCity = "' . $contactCity . '",
+                                                     contactState = "' . $contactState . '",
+                                                     donorTitle = "' . $donorTitle . '",
+                                                     donorFirstName = "' . $donorFirstName . '",
+                                                     donorLastName = "' . $donorLastName . '",
+                                                     donorEmail = "' . $donorEmail . '",
+                                                     donorPhone = "' . $donorPhone . '",
+                                                     donorAddress = "' . $donorAddress . '",
+                                                     donorZip = "' . $donorZip . '",
+                                                     donorCity = "' . $donorCity . '",
+                                                     donorState = "' . $donorState . '",
+                                                     donorComment = "' . $donorComment . '"
                                                   WHERE id = ' . $id . ';';
               $wpdb->query( $sql );
             } else if ( $action == "complete" ) {
