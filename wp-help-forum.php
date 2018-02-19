@@ -231,9 +231,9 @@
      $sql = '';
 
      if ($admin) {
-       $sql = 'SELECT id, dateCreated, status, need, beneficiary, circumstance, contactTitle, contactFirstName, contactLastName, contactEmail, contactPhone, contactAddress, contactZip, contactCity, contactState, donorTitle, donorFirstName, donorLastName, donorEmail, donorPhone, donorAddress, donorZip, donorCity, donorState, donorComment FROM ' . $table_name . ';';
+       $sql = 'SELECT id, dateCreated, status, need, beneficiary, circumstance, contactTitle, contactFirstName, contactLastName, contactEmail, contactPhone, contactAddress, contactZip, contactCity, contactState, donorTitle, donorFirstName, donorLastName, donorEmail, donorPhone, donorAddress, donorZip, donorCity, donorState, donorComment FROM ' . $table_name . ' ORDER BY id DESC;';
      } else {
-       $sql = 'SELECT id, dateCreated, status, need, circumstance FROM ' . $table_name . ' WHERE status = 1;';
+       $sql = 'SELECT id, dateCreated, status, need, circumstance FROM ' . $table_name . ' WHERE status = 1 ORDER BY id DESC;';
      }
 
      $rows = $wpdb->get_results( $sql );
@@ -257,7 +257,7 @@
          echo '</div>';
 
          if ($admin) {
-           if ($row->status != 1 and $row->status != 2) {
+           if ($row->status == 0 or $row->status == 3) {
              echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
              echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
              echo '<input type="hidden" name="id" value="' . $row->id . '">';
@@ -273,12 +273,32 @@
              echo '</div>';
            }
 
-           if ($row->status != 3 and $row->status != 2) {
+           if ($row->status == 0 or $row->status == 1) {
              echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
              echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post" id="donorRejectForm' . $row->id . '">';
              echo '<input type="hidden" name="id" value="' . $row->id . '">';
              echo '<input type="hidden" name="action" value="reject">';
              echo '<button name="submit">Reject</button>';
+             echo '</form>';
+             echo '</div>';
+           }
+
+           if ($row->status == 2) {
+             echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
+             echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post" id="donorRejectForm' . $row->id . '">';
+             echo '<input type="hidden" name="id" value="' . $row->id . '">';
+             echo '<input type="hidden" name="action" value="complete">';
+             echo '<button name="submit">Complete</button>';
+             echo '</form>';
+             echo '</div>';
+           }
+
+           if ($row->status == 4) {
+             echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
+             echo '<form style="margin: 10px; width: 100%;" action="' . $_SERVER['REQUEST_URI'] . '" method="post" id="donorRejectForm' . $row->id . '">';
+             echo '<input type="hidden" name="id" value="' . $row->id . '">';
+             echo '<input type="hidden" name="action" value="reopen">';
+             echo '<button name="submit">Re-open</button>';
              echo '</form>';
              echo '</div>';
            }
@@ -306,7 +326,7 @@
            echo '<button type="button" onclick="document.getElementById(\'donorHelpButton' . $row->id . '\').style.display=\'block\'; document.getElementById(\'helpDonorForm' . $row->id . '\').style.display=\'none\'; document.getElementById(\'donorRejectForm' . $row->id . '\').style.display=\'block\';">Cancel</button>';
            echo '</div>';
            echo '</form>';
-         } else if ($row->status == 2 and current_user_can('edit_posts')) {
+         } else if ($row->status == 2 and $admin) {
            echo '<div style="display: flex; flex-grow: 1; justify-content: center;" align="right">';
            echo '<button style="margin: 10px; width: 100%;" type="button" onclick="this.style.display=\'none\'; document.getElementById(\'transactionDetails' . $row->id . '\').style.display=\'block\';" id="transactionDetailsButton' . $row-> id . '">Transaction Details</button>';
            echo '</div>';
@@ -380,6 +400,10 @@
               $status = 1;
             } else if ( $action == "reject" ) {
               $status = 3;
+            } else if ( $action == "complete" ) {
+              $status = 4;
+            } else if ( $action == "reopen" ) {
+              $status = 2;
             }
           }
 
