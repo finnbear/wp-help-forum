@@ -17,7 +17,7 @@
      $sql = "CREATE TABLE $table_name (
        id INTEGER NOT NULL AUTO_INCREMENT,
        dateCreated DATETIME NOT NULL,
-       status INTEGER NOT NULL DEFAULT 0, /* 0=pending, 1=approved, 2=fulfilled, 3=rejected */
+       status INTEGER NOT NULL DEFAULT 0, /* 0=pending, 1=approved, 2=pledged, 3=rejected, 4=fulfilled */
        need VARCHAR(50) NOT NULL,
        beneficiary VARCHAR(100) NOT NULL,
        circumstance VARCHAR(500) NOT NULL,
@@ -61,34 +61,34 @@
 
    }
 
-   function help_forum_general_form_body($person, $personProper) {
+   function help_forum_general_form_body($person, $personProper, $title = '', $firstName = '', $lastName = '', $email = '', $phone = '', $address = '', $city = '', $state = '', $zip = '') {
      echo '<div>';
      echo '<label for="' . $person . 'Name"><strong>' . $personProper . ' name *</strong></label>';
      echo '<div name="' . $person . 'Name">';
-     echo '<input style="width: 22%; margin-right: 1%;" type="text" name="' . $person . 'Title" maxlength="10" placeholder="Title" list="contactTitles" required>';
+     echo '<input style="width: 22%; margin-right: 1%;" type="text" name="' . $person . 'Title" maxlength="10" placeholder="Title" value="' . $title . '" list="contactTitles" required>';
      echo '<datalist id="contactTitles">';
      echo '<option value="Mr.">';
      echo '<option value="Ms.">';
      echo '<option value="Dr.">';
      echo '</datalist>';
-     echo '<input style="width: 38%; margin-right: 1%;" type="text" name="' . $person . 'FirstName" maxlength="50" placeholder="First" required>';
-     echo '<input style="width: 38%;" type="text" name="' . $person . 'LastName" maxlength="50" placeholder="Last" required>';
+     echo '<input style="width: 38%; margin-right: 1%;" type="text" name="' . $person . 'FirstName" maxlength="50" placeholder="First" value="' . $firstName . '" required>';
+     echo '<input style="width: 38%;" type="text" name="' . $person . 'LastName" maxlength="50" placeholder="Last" value="' . $lastName . '" required>';
      echo '</div>';
      echo '</div>';
      echo '<div>';
      echo '<label for="' . $person . 'Email"><strong>' . $personProper . ' email</strong></label>';
-     echo '<input type="email" name="' . $person . 'Email" maxlength="100">';
+     echo '<input type="email" name="' . $person . 'Email" maxlength="100" value="' . $email . '">';
      echo '</div>';
      echo '<div>';
      echo '<label for="' . $person . 'Phone"><strong>' . $personProper . ' phone</strong></label>';
-     echo '<input type="tel" name="' . $person . 'Phone" maxlength="20">';
+     echo '<input type="tel" name="' . $person . 'Phone" maxlength="20" value="' . $phone . '">';
      echo '</div>';
      echo '<div>';
      echo '<label for="' . $person . 'Address"><strong>' . $personProper . ' address</strong></label>';
-     echo '<input style="margin-bottom: 5px;" type="text" name="' . $person . 'Address" maxlength="100" placeholder="Address">';
+     echo '<input style="margin-bottom: 5px;" type="text" name="' . $person . 'Address" maxlength="100" placeholder="Address" value="' . $address . '">';
      echo '<div>';
-     echo '<input style="width: 40%; margin-right: 1%;" type="text" name="' . $person . 'City" maxlength="50" placeholder="City">';
-     echo '<input style="width: 29%; margin-right: 1%;" type="text" name="' . $person . 'State" maxlength="2" list="contactStates" placeholder="State">';
+     echo '<input style="width: 40%; margin-right: 1%;" type="text" name="' . $person . 'City" maxlength="50" placeholder="City" value="' . $city . '">';
+     echo '<input style="width: 29%; margin-right: 1%;" type="text" name="' . $person . 'State" maxlength="2" list="contactStates" placeholder="State" value="' . $state .'">';
      echo '<datalist id="contactStates">';
      echo '<option value="AL">';
      echo '<option value="AK">';
@@ -141,7 +141,7 @@
      echo '<option value="WY">';
      echo '</datalist>';
      echo '<style>input[type=number] { -moz-appearance: textfield; } input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }</style>';
-     echo '<input style="width: 29%;" type="number" name="' . $person . 'Zip" maxlength="10" placeholder="Zip">';
+     echo '<input style="width: 29%;" type="number" name="' . $person . 'Zip" maxlength="10" placeholder="Zip" value="' . $zip . '">';
      echo '</div>';
      echo '</div>';
    }
@@ -312,65 +312,12 @@
            echo '</div>';
 
            echo '<div style="display: none; margin: 10px; width: 100%;" id="transactionDetails' . $row->id . '">';
-           echo '<h3>Transaction Details</h3>';
 
-           echo '<table>';
-           echo '<thead>';
-           echo '<tr>';
-           echo '<th>Field</th>';
-           echo '<th>Contact</th>';
-           echo '<th>Donor</th>';
-           echo '</tr>';
-           echo '</thead>';
-           echo '<tbody>';
-           echo '<tr>';
-           echo '<td>Title</td>';
-           echo '<td>' . $row->contactTitle . '</td>';
-           echo '<td>' . $row->donorTitle . '</td>';
-           echo '</tr>';
-           echo '<tr>';
-           echo '<td>First name</td>';
-           echo '<td>' . $row->contactFirstName . '</td>';
-           echo '<td>' . $row->donorFirstName . '</td>';
-           echo '</tr>';
-           echo '<tr>';
-           echo '<td>Last name</td>';
-           echo '<td>' . $row->contactLastName . '</td>';
-           echo '<td>' . $row->donorLastName . '</td>';
-           echo '</tr>';
-           echo '<tr>';
-           echo '<td>Email</td>';
-           echo '<td>' . $row->contactEmail . '</td>';
-           echo '<td>' . $row->donorEmail . '</td>';
-           echo '</tr>';
-           echo '<tr>';
-           echo '<td>Phone</td>';
-           echo '<td>' . $row->contactPhone . '</td>';
-           echo '<td>' . $row->donorPhone . '</td>';
-           echo '</tr>';
-           echo '<tr>';
-           echo '<td>Address</td>';
-           echo '<td>' . $row->contactAddress . '</td>';
-           echo '<td>' . $row->donorAddress . '</td>';
-           echo '</tr>';
-           echo '<tr>';
-           echo '<td>City</td>';
-           echo '<td>' . $row->contactCity . '</td>';
-           echo '<td>' . $row->donorCity . '</td>';
-           echo '</tr>';
-           echo '<tr>';
-           echo '<td>State</td>';
-           echo '<td>' . $row->contactState . '</td>';
-           echo '<td>' . $row->donorState . '</td>';
-           echo '</tr>';
-           echo '<tr>';
-           echo '<td>Zip</td>';
-           echo '<td>' . $row->contactZip . '</td>';
-           echo '<td>' . $row->donorZip . '</td>';
-           echo '</tr>';
-           echo '<tr>';
-           echo '</tbody>';
-           echo '</table>';
+           echo '<h3>Contact Details</h3>';
+           help_forum_general_form_body("contact", "Contact", $row->contactTitle, $row->contactFirstName, $row->contactLastName, $row->contactEmail, $row->contactPhone, $row->contactAddress, $row->contactCity, $row->contactState, $row->contactZip);
+
+           echo '<h3>Donor Details</h3>';
+           help_forum_general_form_body("donor", "Donor", $row->donorTitle, $row->donorFirstName, $row->donorLastName, $row->donorEmail, $row->donorPhone, $row->donorAddress, $row->donorCity, $row->donorState, $row->donorZip);
 
            echo '<h3>Donor Comment</h3>';
            echo '<p>' . $row->donorComment . '</p>';
