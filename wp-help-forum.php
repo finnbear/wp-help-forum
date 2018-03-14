@@ -442,8 +442,8 @@
               $contactZip = sanitize_text_field( $_POST['contactZip'] );
               $contactCity = sanitize_text_field( $_POST['contactCity'] );
               $contactState = sanitize_text_field( strtoupper( $_POST['contactState'] ) );
-              $contactComment = sanitize_textarea_field( $_POST['contactComment'] );
 
+              $donorTitle = sanitize_text_field( $_POST['donorTitle'] );		    
               $donorFirstName = sanitize_text_field( $_POST['donorFirstName'] );
               $donorLastName = sanitize_text_field( $_POST['donorLastName'] );
               $donorEmail = sanitize_email( $_POST['donorEmail'] );
