@@ -2,7 +2,7 @@
    /*
    Plugin Name: Help Forum
    Plugin URI: https://github.com/finnbear/wp-help-forum
-   Version: 1.0
+   Version: 1.1
    Author: Finn Bear
    Author URI: https://www.finnbear.com
    */
